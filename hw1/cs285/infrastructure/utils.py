@@ -1,13 +1,14 @@
 import numpy as np
 import time
 
+
 ############################################
 ############################################
 
 def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('rgb_array')):
-
     # initialize env for the beginning of a new rollout
-    ob = TODO # HINT: should be the output of resetting the env
+    # HINT: should be the output of resetting the env
+    ob = TODO
 
     # init vars
     obs, acs, rewards, next_obs, terminals, image_obs = [], [], [], [], [], []
@@ -27,7 +28,7 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
 
         # use the most recent ob to decide what to do
         obs.append(ob)
-        ac = TODO # HINT: query the policy's get_action function
+        ac = TODO  # HINT: query the policy's get_action function
         ac = ac[0]
         acs.append(ac)
 
@@ -41,13 +42,15 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
 
         # TODO end the rollout if the rollout ended
         # HINT: rollout can end due to done, or due to max_path_length
-        rollout_done = TODO # HINT: this is either 0 or 1
+        # HINT: this is either 0 or 1
+        rollout_done = TODO
         terminals.append(rollout_done)
 
         if rollout_done:
             break
 
     return Path(obs, image_obs, acs, rewards, next_obs, terminals)
+
 
 def sample_trajectories(env, policy, min_timesteps_per_batch, max_path_length, render=False, render_mode=('rgb_array')):
     """
@@ -60,10 +63,13 @@ def sample_trajectories(env, policy, min_timesteps_per_batch, max_path_length, r
     timesteps_this_batch = 0
     paths = []
     while timesteps_this_batch < min_timesteps_per_batch:
+        # TODO
+        sample_trajectory(env, policy, max_path_length,render, render_mode)
 
-        TODO
+        timesteps_this_batch += 1
 
     return paths, timesteps_this_batch
+
 
 def sample_n_trajectories(env, policy, ntraj, max_path_length, render=False, render_mode=('rgb_array')):
     """
@@ -74,9 +80,12 @@ def sample_n_trajectories(env, policy, ntraj, max_path_length, render=False, ren
     """
     paths = []
 
-    TODO
+    # TODO
+    for i in range(ntraj):
+        sample_trajectory()
 
     return paths
+
 
 ############################################
 ############################################
@@ -88,10 +97,10 @@ def Path(obs, image_obs, acs, rewards, next_obs, terminals):
     """
     if image_obs != []:
         image_obs = np.stack(image_obs, axis=0)
-    return {"observation" : np.array(obs, dtype=np.float32),
-            "image_obs" : np.array(image_obs, dtype=np.uint8),
-            "reward" : np.array(rewards, dtype=np.float32),
-            "action" : np.array(acs, dtype=np.float32),
+    return {"observation": np.array(obs, dtype=np.float32),
+            "image_obs": np.array(image_obs, dtype=np.uint8),
+            "reward": np.array(rewards, dtype=np.float32),
+            "action": np.array(acs, dtype=np.float32),
             "next_observation": np.array(next_obs, dtype=np.float32),
             "terminal": np.array(terminals, dtype=np.float32)}
 
@@ -111,6 +120,7 @@ def convert_listofrollouts(paths, concat_rew=True):
     next_observations = np.concatenate([path["next_observation"] for path in paths])
     terminals = np.concatenate([path["terminal"] for path in paths])
     return observations, actions, rewards, next_observations, terminals
+
 
 ############################################
 ############################################

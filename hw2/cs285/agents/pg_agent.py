@@ -1,6 +1,6 @@
 import numpy as np
 
-from .base_agent import BaseAgent
+from cs285.agents.base_agent import BaseAgent
 from cs285.policies.MLP_policy import MLPPolicyPG
 from cs285.infrastructure.replay_buffer import ReplayBuffer
 
@@ -46,7 +46,7 @@ class PGAgent(BaseAgent):
         # HINT2: look at the MLPPolicyPG class for how to update the policy
             # and obtain a train_log
 
-        return train_log
+        return 0 # train_log
 
     def calculate_q_vals(self, rewards_list):
 
@@ -70,12 +70,12 @@ class PGAgent(BaseAgent):
         # ordering as observations, actions, etc.
 
         if not self.reward_to_go:
-            TODO
+            # TODO
 
         # Case 2: reward-to-go PG
         # Estimate Q^{pi}(s_t, a_t) by the discounted sum of rewards starting from t
         else:
-            TODO
+            # TODO
 
         return q_values
 
