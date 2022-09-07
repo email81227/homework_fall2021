@@ -39,14 +39,21 @@ class PGAgent(BaseAgent):
             and the calculated qvals/advantages that come from the seen rewards.
         """
 
-        # TODO: update the PG actor/policy using the given batch of data, and
+        # Done: update the PG actor/policy using the given batch of data, and
         # return the train_log obtained from updating the policy
 
         # HINT1: use helper functions to compute qvals and advantages
         # HINT2: look at the MLPPolicyPG class for how to update the policy
             # and obtain a train_log
 
-        return 0 # train_log
+        q_values = self.calculate_q_vals(rewards_list)
+
+        # TODO: one of the observations should be next_observations
+        advantages = self.estimate_advantage(observations, rewards_list, q_values, terminals)
+
+        train_log = self.actor.update(observations, actions, advantages, q_values=q_values)
+
+        return train_log
 
     def calculate_q_vals(self, rewards_list):
 
@@ -63,6 +70,8 @@ class PGAgent(BaseAgent):
         # HINT2: use the helper functions self._discounted_return and
             # self._discounted_cumsum (you will need to implement these). These
             # functions should only take in a single list for a single trajectory.
+        for reward_list in rewards_list:
+            self._discounted_return(reward_list)
 
         # Case 1: trajectory-based PG
         # Estimate Q^{pi}(s_t, a_t) by the total discounted reward summed over entire trajectory
@@ -159,7 +168,11 @@ class PGAgent(BaseAgent):
             Output: list where each index t contains sum_{t'=0}^T gamma^t' r_{t'}
         """
 
-        # TODO: create list_of_discounted_returns
+        # Done: create list_of_discounted_returns
+
+        discounted_rewards = [self.gamma**i * rt for i, rt in enumerate(rewards)]
+
+        list_of_discounted_returns = self._discounted_cumsum(discounted_rewards)
 
         return list_of_discounted_returns
 
@@ -170,8 +183,8 @@ class PGAgent(BaseAgent):
             -and returns a list where the entry in each index t' is sum_{t'=t}^T gamma^(t'-t) * r_{t'}
         """
 
-        # TODO: create `list_of_discounted_returns`
+        # Done: create `list_of_discounted_returns`
         # HINT: it is possible to write a vectorized solution, but a solution
             # using a for loop is also fine
 
-        return list_of_discounted_cumsums
+        return np.cumsum(rewards)
